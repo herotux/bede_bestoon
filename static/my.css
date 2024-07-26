@@ -79,6 +79,9 @@
     width: 30px;
   }
   @media screen and (min-width: 600px) {
+    .mobile-links {
+    display: none;
+    }
     .mobile-nav {
     display: none;
     }
