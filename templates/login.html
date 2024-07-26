@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ورود</title>
+    <script src="../static/persiandatepicker/jalalidatepicker.js"></script>
+    <link rel="stylesheet" href="../static/persiandatepicker/jalalidatepicker.css" />
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.rtl.css">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.rtl.min.css">
+    <link href="../static/fontawesome/css/fontawesome.css" rel="stylesheet" />
+    <link href="../static/fontawesome/css/brands.css" rel="stylesheet" />
+    <link href="../static/fontawesome/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../static/my.css">
+
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3>ورود به سیستم</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/login" method="post">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="username" name="username" placeholder="نام کاربری خود را وارد کنید">
+                                <label for="username">نام کاربری</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                                <label for="password">رمز عبور</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">ورود</button>
+                            <div class="text-center">
+                                <a class="btn btn-primary btn-lg" href="/register" role="button">ثبت نام</a>
+                                
+                              </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %} ویرایش اشخاص  {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3>ویرایش اشخاص  </h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/edit_person/{{person.id}}" method="post">
+                            <div class="form-group">
+                                <label for="first_name">نام:</label>
+                                <input type="text" id="first_name" class="form-control" name="first_name" value="{{ person.first_name }}" required><br><br>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">نا خانوادگی:</label>
+                                <input type="text" id="last_name" class="form-control" name="last_name" value="{{ person.last_name }}" required><br><br>
+                            </div>
+                            <div class="form-group">    
+                                <label for="username">نام کاربری:</label>
+                                <input type="text" id="username" class="form-control" name="username" value="{{ person.username }}" required><br><br>
+                            </div>
+                            <div class="form-group">    
+                                <label for="relation">نسبت:</label>
+                                <select name="relation" id="relation" class="form-control" class="form-select" aria-label="Default select example">
+                                    <option value="newperson">طرف حساب</option>
+                                    <option value="damad">طرف داماد</option>
+                                    <option value="aroos">طرف عروس</option>
+                                </select><br><br>
+                            </div>
+                                
+                            <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                                <a class="btn btn-danger btn-block" href="/delete_person/{{person.id}}">حذف</a>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {% endblock javascripts %}
+        

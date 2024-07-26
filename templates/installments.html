@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %} مدیریت وام {% endblock %}
+{% block stylesheets %}
+<style>
+    .form-control-focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  .was-validated :valid + .forSm-control-focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+  }
+  
+  .was-validated :invalid + .form-control-focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+  }
+  </style>
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3> مدیریت وام</h3>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            افزودن وام قرض الحسنه
+                         </button><br>
+                       <form action="/install_spec" method="post" class="collapse" id="collapseExample">
+                           <div class="row">
+                               <div class="col-md-6">
+                                   <div class="form-group">
+                                       <label for="amount">مبلغ</label>
+                                       <input type="number" class="form-control" id="amount" name="amount" placeholder="مبلغ">
+                                   </div>
+                               </div>
+                               <div class="col-md-6">
+                                   <div class="form-group">
+                                       <label for="person_id">طرف حساب</label>
+                                       <select name="person_id" id="person_id" class="form-select" aria-label="Default select example">
+                                           <option selected disabled hidden value="">از بین گزینه ها انتخاب کنید...</option>
+                                           {% for person in persons %}
+                                               <option value="{{person.id}}">{{person.id|person_name}}</option>
+                                           {% endfor %}
+                                       </select>
+                                   </div>
+                                   
+                               </div>
+                           </div>
+                           <div class="row">
+                               <div class="col-md">
+                                   <div class="col-md-3">
+                                       <div class="form-group">
+                                           <label dir="rtl" for="date">تاریخ </label>
+                                           <input name="first_date" data-jdp placeholder="تاریخ قسط اول" id="first_date" />
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="row">
+                               <div class="col-md">
+                               <div class="form-group">
+                                       <label for="inst_num">تعداد اقساط</label>
+                                       <input type="number" class="form-control" id="inst_num" name="inst_num" placeholder="تعداد اقساط">
+                                   </div>
+                               </div>
+                               <div class="col-md">
+                                   <div class="form-group">
+                                       <label for="payed_insts">تا امروز مرتب پرداخت کرده ام</label>
+                                       <input type="checkbox" checked id="payed_insts" name="payed_insts" value="1"/>
+                                   </div>
+                               </div>
+                               <div class="col-md">
+                                   <div class="form-group">
+                                       <label for="inst_rate">نرخ بهره</label>
+                                       <input type="number" class="form-control" id="inst_rate" name="inst_rate" placeholder="نرخ بهره">
+                                   </div>
+                               </div>
+                               <div class="col-md">
+                                   <div class="form-group">
+                                       <label for="inst_rate">دوره بازپرداخت</label>
+                                       <input type="number" class="form-control" id="pay_period" name="pay_period" placeholder="دوره بازپرداخت">
+                                   </div>
+                               </div>
+                               <div class="row">
+                                   <div class="col-md">
+                                       <div class="form-group">
+                                           <label for="text">شرح</label>
+                                           <input type="text" class="form-control" id="text" name="text" placeholder="شرح"><br>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="text-center form-group">
+                               <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                           </div>
+                           
+                       </form><br>
+                       <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">
+                        سایر وا ها
+                     </button><br>
+                        <form action="/install" method="post" class="collapse" id="collapse2">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="amount">مبلغ</label>
+                                        <input type="number" class="form-control" id="amount" name="amount" placeholder="مبلغ">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="person_id">طرف حساب</label>
+                                        <select name="person_id" id="person_id" class="form-select" aria-label="Default select example">
+                                            <option selected disabled hidden value="">از بین گزینه ها انتخاب کنید...</option>
+                                            {% for person in persons %}
+                                                <option value="{{person.id}}">{{person.id|person_name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label dir="rtl" for="date">تاریخ </label>
+                                            <input name="first_date" data-jdp placeholder="تاریخ قسط اول" id="first_date" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md">
+                                   <div class="form-group">
+                                        <label for="inst_num">تعداد اقساط</label>
+                                        <input type="number" class="form-control" id="inst_num" name="inst_num" placeholder="تعداد اقساط">
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-group">
+                                        <label for="payed_insts">تا امروز مرتب پرداخت کرده ام</label>
+                                        <input type="checkbox" checked id="payed_insts" name="payed_insts" value="1"/>
+                                     </div>
+                                 </div>
+                                <div class="col-md">
+                                    <div class="form-group">
+                                         <label for="inst_rate">نرخ بهره</label>
+                                         <input type="number" class="form-control" id="inst_rate" name="inst_rate" placeholder="نرخ بهره">
+                                     </div>
+                                 </div>
+                                 <div class="col-md">
+                                    <div class="form-group">
+                                         <label for="inst_rate">دوره بازپرداخت</label>
+                                         <input type="number" class="form-control" id="pay_period" name="pay_period" placeholder="دوره بازپرداخت">
+                                     </div>
+                                 </div>
+                                 <div class="row">
+                                    <div class="col-md">
+                                        <div class="form-group">
+                                            <label for="text">شرح</label>
+                                            <input type="text" class="form-control" id="text" name="text" placeholder="شرح"><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center form-group">
+                                <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                            </div>
+                            
+                        </form><br>
+                        <div class="list-group">
+                            {% for inst in installments %}
+                                <a href="/inst_page/{{inst.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">{{inst.text}}</h3>
+                                    <small>{{inst.first_date|jalali_date}} </small>
+                                    </div>
+                                    <p class="mb-1" style="color: green;">مبلغ کل وام: {{inst.amount|en2fa}}</p>
+                                    <h5 class="mb-1">{{inst.person|person_name}}</h5>
+                                    
+                                    <small>دوره بازپرداخت: {{inst.pay_period|en2fa}} ماه یکبار</small><br>
+                                    <small>تعداد اقساط: {{inst.inst_num|en2fa}} قسط</small>
+                                </a>
+                                {% endfor %}
+                        </div>
+
+                    
+                </div>
+            </div>
+
+            
+
+        </div>
+
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+    <script type="module">
+        import Tags from "../static/js/tags.js";
+        Tags.init("select");
+    </script>
+    <script>
+        jalaliDatepicker.startWatch({
+            minDate: "attr",
+            maxDate: "attr",
+            minTime: "attr",
+            maxTime: "attr",
+            hideAfterChange: true,
+            autoHide: true,
+            showTodayBtn: true,
+            showEmptyBtn: true,
+            topSpace: 10,
+            bottomSpace: 30,
+            dayRendering(opt,input){
+                return {
+                    isHollyDay:opt.day==1
+                }
+            }
+        });
+        
+        document.getElementById("aaa").addEventListener("jdp:change", function (e) { console.log(e) });
+    </script>
+    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    {% endblock javascripts %}

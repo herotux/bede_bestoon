@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %} دریافت {% endblock %}
+{% block stylesheets %}
+    <style>
+        .form-control-focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+      
+      .was-validated :valid + .form-control-focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+      }
+      
+      .was-validated :invalid + .form-control-focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+      }
+      </style>
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3> دریافت </h3>
+                    </div>
+
+                    <div class="card-body">
+                        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            افزودن
+                          </button><br>
+                        <form action="/income" method="post" class="collapse" id="collapseExample">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="amount">طرف حساب</label><a class="fa-solid fa-user" href="/persons"></a>
+                                        <select name="person" id="person" class="form-select" aria-label="Default select example">
+                                          {% for person in persons %}
+                                              <option value="{{person.id}}">{{person.first_name}} {{person.last_name}}</option>
+                                          {% endfor %}
+                                          </select>
+                                      </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="amount">مبلغ</label>
+                                        <input type="number" class="form-control" id="amount" name="amount" placeholder="مبلغ">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label dir="rtl" for="date">تاریخ </label>
+                                        <input name="date" data-jdp placeholder="تاریخ" id="date" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="tags">تگ </label><a class="fa-solid fa-tags" href="/tags"></a>
+                                        <select class="form-select" id="tags" name="tags" aria-label="Default select example">
+                                            <option selected value="">از تگ ها انتخاب کنید...</option>
+                                            {% for tag in tags %}
+                                                <option value="{{tag.id}}">{{tag.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="amount">دسته بندی </label><a class="fa-solid fa-category" href="/category"></a>
+                                <select name="category" id="category" class="form-select" aria-label="Default select example">
+                                    <option selected value="">از دسته ها انتخاب کنید...</option>
+                                    {% for cat in category %}
+                                        <option value="{{cat.id}}">{{cat.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                          <div class="form-group">
+                            <label dir="rtl" for="text">شرح </label>
+                            <input type="text" class="form-control" id="text" name="text" placeholder="شرح">
+                            </div>
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                                
+                            </div>
+                        </form><br>
+
+                        <div class="list-group">
+                            {% for income in incoms|sort(attribute='date', reverse=true) %}
+                            <a href="/edit_income/{{income.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                <h3 class="mb-1">{{income.category|cat_name}}</h3>
+                                <small>{{income.date|jalali_date}}  </small>
+                                </div>
+                                <p class="mb-1" style="color: green;">{{income.amount|en2fa}}</p>
+                                <h5 class="mb-1">{{income.person|person_name}}</h5>
+                                <small>{{income.text}}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script type="module">
+    import Tags from "../static/js/tags.js";
+    Tags.init("select");
+</script>
+<script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+{% endblock javascripts %}

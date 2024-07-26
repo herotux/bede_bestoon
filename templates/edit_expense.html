@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %} دریافت {% endblock %}
+{% block stylesheets %}
+    <style>
+        .form-control-focus {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+      
+      .was-validated :valid + .form-control-focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+      }
+      
+      .was-validated :invalid + .form-control-focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+      }
+      </style>
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3> ویرایش پرداخت </h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="form-group">
+                              <label for="amount">طرف حساب</label>
+                              <select name="person" id="person" class="form-select" aria-label="Default select example">
+                                <option value="{{expense.person}}">{{expense.person|person_name}}</option>
+                              {% for person in persons %}
+                                  <option value="{{person.id}}">{{person.first_name}} {{person.last_name}}</option>
+                              {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="amount">مبلغ</label>
+                                <input type="text" value="{{expense.amount}}" class="form-control" id="amount" name="amount" placeholder="مبلغ">
+                            </div>
+                            <div class="form-group">
+                              <label dir="rtl" for="date">تاریخ </label>
+                              <input name="date" value="{{expense.date|jalali_date_en}} " data-jdp placeholder="تاریخ" id="date" />
+                            </div>
+                            <div class="form-group">
+                                <label dir="rtl" for="text">شرح </label>
+                                <input type="text" value="{{expense.text}}" class="form-control" id="text" name="text" placeholder="شرح">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tags">تگ </label><a class="fa-solid fa-tags" href="/tags"></a>
+                                <select class="form-select" id="tags" name="tags" data-allow-clear="true" data-suggestions-threshold="0">
+                                    
+                                        
+                                        <option value="{{expense.tag_id}}">{{expense.tag.name}}</option>
+                                        <option value="">از بین تگ ها انتخاب کنید...</option>
+                                        {% for tag in tags %}
+                                            {% if tag.id !=  expense.tag_id %}
+                                                <option value="{{tag.id}}">{{tag.name}}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">دسته بندی </label><a class="fa-solid fa-category" href="/category"></a>
+                                <select name="category" id="category" class="form-select" aria-label="Default select example">
+                                    
+                                    <option value="{{expense.cateory}}">{{expense.category|cat_name}}</option>
+                                    <option value="">از بین دسته ها انتخاب کنید...</option>
+                                    {% for cat in category %}
+                                        {% if cat.id !=  expense.category %}
+                                            <option value="{{cat.id}}">{{cat.name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                              <a class="btn btn-danger btn-block" href="/delete_expense/{{expense.id}}">حذف</a>
+                                
+                              </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+    <script type="module">
+        import Tags from "../static/js/tags.js";
+        Tags.init("select");
+    </script>
+    <script>
+        jalaliDatepicker.startWatch({
+            minDate: "attr",
+            maxDate: "attr",
+            minTime: "attr",
+            maxTime: "attr",
+            hideAfterChange: false,
+            autoHide: true,
+            showTodayBtn: true,
+            showEmptyBtn: true,
+            topSpace: 10,
+            bottomSpace: 30,
+            dayRendering(opt,input){
+                return {
+                    isHollyDay:opt.day==1
+                }
+            }
+        });
+        
+        document.getElementById("aaa").addEventListener("jdp:change", function (e) { console.log(e) });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {% endblock javascripts %}

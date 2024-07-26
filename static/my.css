@@ -1,0 +1,85 @@
+@font-face {
+    font-family: Vazir;
+    font-style: normal;
+    font-weight: normal;
+    src: url('/sfonts/vazir-font-v16.1.0/Vazir-Medium.eot');
+    src: url('fonts/vazir-font-v16.1.0/Vazir-Medium.eot?#iefix') format('embedded-opentype'), 
+    url('fonts/vazir-font-v16.1.0/Vazir-Medium.woff2') format('woff2'), 
+    url('fonts/vazir-font-v16.1.0/Vazir-Medium.woff') format('woff'), 
+    url('fonts/vazir-font-v16.1.0/Vazir-Medium.ttf') format('truetype');
+   }
+   @font-face {
+    font-family: Vazir;
+    font-style: normal;
+    font-weight: bold;
+    src: url('fonts/vazir-font-v16.1.0/Vazir-Bold.eot');
+    src: url('fonts/vazir-font-v16.1.0/Vazir-Bold.eot?#iefix') format('embedded-opentype'), 
+    url('fonts/vazir-font-v16.1.0/Vazir-Bold.woff2') format('woff2'), 
+    url('fonts/vazir-font-v16.1.0/Vazir-Bold.woff') format('woff'), 
+    url('fonts/vazir-font-v16.1.0/Vazir-Bold.ttf') format('truetype');
+   }
+    
+    
+   body{
+   font-family: 'Vazir', Arial, sans-serif;
+   font-weight:normal;
+   background-color: rgb(193, 193, 224);
+   padding-bottom: 70px;
+   }
+
+
+  .pink{
+    background-color: pink;
+  }
+
+   .red{
+    background-color: red;
+   }
+
+   .orange{
+    background-color: orange;
+   }
+
+   .blue{
+    background-color: blue;
+   }
+
+   a:link { 
+    text-decoration: none; 
+  } 
+  a:visited { 
+    text-decoration: none; 
+  } 
+  a:hover { 
+    text-decoration: none; 
+  } 
+  a:active { 
+    text-decoration: none; 
+  }
+
+   .mobile-nav {
+    background: #F1F1F1;
+    position: fixed;
+    bottom: 0;
+    height: 65px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    z-index:10;
+  }
+
+  
+  .bloc-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .bloc-icon i {
+    width: 30px;
+  }
+  @media screen and (min-width: 600px) {
+    .mobile-nav {
+    display: none;
+    }
+  }

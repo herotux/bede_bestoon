@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %} {{tag.name}} {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="container">
+    <div class="row">            
+        <div class="col-md">
+            <div class="row justify-content-center">
+                <div class="col-md">
+                    <div class="card">
+                        <div class="card-header bg-success text-white text-center">
+                            <h3>دریافت</h3>
+                        </div>
+                        <div class="card-body"> 
+                            <div class="list-group">
+                                {% for income in incoms %}
+                                <a href="/edit_income/{{income.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">{{income.tag.name}}</h3>
+                                    <small>{{income.date }} </small>
+                                    </div>
+                                    <p class="mb-1" style="color: green;">{{income.amount|en2fa}}</p>
+                                    <h5 class="mb-1">{{income.person|person_name}}</h5>
+                                    <small>{{income.text}}</small>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="row justify-content-center">
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header bg-warning text-white text-center">
+                        <h3>پرداخت</h3>
+                    </div>
+                    <div class="card-body"> 
+                        <div class="list-group">
+                            {% for expense in expenses %}
+                            <a href="/edit_expense/{{expense.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                <h3 class="mb-1">{{expense.tag.name}}</h3>
+                                <small>{{expense.date }} </small>
+                                </div>
+                                <p class="mb-1" style="color: green;">{{expense.amount|en2fa}}</p>
+                                <h5 class="mb-1">{{expense.person|person_name}}</h5>
+                                <small>{{expense.text}}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% endblock javascripts %}
+    

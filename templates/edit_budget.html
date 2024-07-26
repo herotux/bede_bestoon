@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %} ویرایش بودجه  {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3>ویرایش بودجه  </h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/tags" method="post">
+                            <div class="form-group">
+                                <label for="monthly_budget">بودجه ماهیانه:</label>
+                                <input type="number" id="monthly_budget" name="monthly_budget" value="{{ budget.monthly_budget }}" required><br><br>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">دسته بندی </label><a class="fa-solid fa-category" href="/category"></a>
+                                <select name="category" id="category" class="form-select" aria-label="Default select example">
+                                    
+                                    <option value="{{budget.cateory}}">{{budget.category|cat_name}}</option>
+                                    <option value="">از بین دسته ها انتخاب کنید...</option>
+                                    {% for cat in category %}
+                                        {% if cat.id !=  budget.category %}
+                                            <option value="{{cat.id}}">{{cat.name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                              <button class="btn btn-danger btn-block" href="/delete_budget/{{budget.id}}">حذف</button> 
+                              </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {% endblock javascripts %}
+        
+    

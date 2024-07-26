@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %} ویرایش بدهی  {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3>ویرایش بدهی </h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/edit_debt/{{debt.id}}" method="post">
+                            <div class="form-group">
+                                <label for="person_id">مبلغ:</label>
+                                <input type="text" id="amount" class="form-control" name="amount" value="{{ debt.amount }}" required><br>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="person_id">طلبکار:</label>
+                                <select name="person_id" id="person_id" class="form-select" aria-label="Default select example">
+                                    <option value="{{ debt.person}}">{{ debt.person|person_name}}</option>
+                                    <option value="">هیچکدام</option>
+                                    {% for person in persons %}
+                                        <option value="{{person.id}}">{{person.id|person_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md">
+                                    <div class="form-group">
+                                        <label for="amount">شرح</label>
+                                        <input type="text" value="{{debt.text}}" class="form-control" id="text" name="text" placeholder="شرح"><br>
+                                    </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="date">تاریخ </label>
+                                        <input name="date" value="{{debt.date }}" data-jdp placeholder="تاریخ" id="date" />
+                                    </div>
+                                </div>
+
+                                
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="pay_date">تاریخ پرداخت</label>
+                                        <input name="pay_date" value="{{debt.pay_date }}" data-jdp placeholder="تاریخ پرداخت" id="pay_date" />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                                                        
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                              <a class="btn btn-danger btn-block" href="/delete_debt/{{debt.id}}">حذف</a> 
+                              </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    {% endblock javascripts %}
+        
+    

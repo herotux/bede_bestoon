@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه کاربری</title>
+    <script src="../static/persiandatepicker/jalalidatepicker.js"></script>
+    <link rel="stylesheet" href="../static/persiandatepicker/jalalidatepicker.css" />
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.rtl.css">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.rtl.min.css">
+    <link href="../static/fontawesome/css/fontawesome.css" rel="stylesheet" />
+    <link href="../static/fontawesome/css/brands.css" rel="stylesheet" />
+    <link href="../static/fontawesome/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../static/my.css">
+
+</head>
+    <body>
+        
+        
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-xl">
+                <!-- Logo -->
+                <a class="navbar-brand" href="#">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                </a>
+                <!-- Collapse -->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <!-- Nav -->
+                    <div class="navbar-nav mx-lg-auto">
+                    <a class="nav-item nav-link active" href="/" aria-current="page">داشبورد</a>
+                    <a class="nav-item nav-link" href="/income">دریافت</a>
+                    <a class="nav-item nav-link" href="/expense">پرداخت</a>
+                    <a class="nav-item nav-link" href="/persons">اشخاص</a>
+                    <a class="nav-item nav-link" href="/tags">تگ ها</a>
+                    <a class="nav-item nav-link" href="/category">دسته‌بندی</a>
+                    <a class="nav-item nav-link" href="/budget">بودجه بندی</a>
+                    <a class="nav-item nav-link" href="/credit">طلب</a>
+                    <a class="nav-item nav-link" href="/debt">بدهی</a>
+                    <a class="nav-item nav-link" href="/install">اقساط</a>
+                    <a class="nav-item nav-link" href="/sooraneh">سورانه </a>
+                    </div>
+                    <!-- Right navigation -->
+                    <div class="navbar-nav ms-lg-4">
+                        <a class="nav-item nav-link" href="/logout">خروج</a>
+                    </div>
+                </div>
+                </div>
+            </nav>
+            
+            <header class="container-fluid p-5">
+                {% if person %}
+                    <h1> {{person.id|person_name}}</h1>
+                {% else %}
+                    <h1>بده بستون</h1>
+                {% endif %}
+            </header>
+            {% if not person %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="card">
+                                <div class="card-header pink text-white text-center">
+                                    <h3>گزارش ماهیانه</h3>
+                                </div>
+                                <div class="card-body" >
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <p>مجموع درآمد  {{allincs|en2fa}}</p>
+                                            {% for key, value in inc_dict.items() %} 
+                                                {% if value !=0 %}
+                                                    <p>{{key|cat_name}}  {{value|en2fa}}<br></p>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="col-md">
+                                            <p>مجموع هزینه {{allexps|en2fa}}</p>
+                                            {% for key, value in exp_dict.items() %} 
+                                                {% if value !=0 %}
+                                                    <p>{{key|cat_name}}  {{value|en2fa}}<br></p>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </br>
+            {% endif %}
+        
+                <div class="row">
+                    {% if incoms %}      
+                    <div class="col-md">
+                        <div class="card">
+                            <div class="card-header bg-success text-white text-center">
+                                <h3>دریافت</h3>
+                            </div>
+                            <div class="card-body" > 
+                                <div class="list-group">
+                                    {% for income in incoms|sort(attribute='date', reverse=true) %}
+                                    <a href="/edit_income/{{income.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                        <h3 class="mb-1">{{income.category|cat_name}}</h3>
+                                        <small>{{income.date|jalali_date}}  </small>
+                                        </div>
+                                        <p class="mb-1" style="color: green;">{{income.amount|en2fa}}</p>
+                                        <h5 class="mb-1">{{income.person|person_name}}</h5>
+                                        <small>{{income.text}}</small>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if expenses %}
+                    <div class="col-md">
+                        <div class="card">
+                            <div class="card-header bg-warning text-white text-center">
+                                <h3>پرداخت</h3>
+                            </div>
+                            <div class="card-body" > 
+                                <div class="list-group">
+                                    {% for expense in expenses|sort(attribute='date', reverse=true) %}
+                                    <a href="/edit_expense/{{expense.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h3 class="mb-1">{{expense.category|cat_name}}</h3>
+                                            <small>{{expense.date|jalali_date }} </small>
+                                            </div>
+                                            <p class="mb-1" style="color: red;">{{expense.amount|en2fa}}</p>
+                                            <h5 class="mb-1">{{expense.person|person_name}}</h5>
+                                            <small>{{expense.text}}</small>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if credit %}
+                    <div class="col-md">
+                        <div class="card">
+                            <div class="card-header bg-warning text-white text-center">
+                                <h3>طلب</h3>
+                            </div>
+                            <div class="card-body" >
+                                <div class="list-group">
+                                    {% for cr in credit|sort(attribute='date', reverse=true) %}
+                                    <a href="/edit_credit/{{cr.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h3 class="mb-1">{{cr.person|person_name}}</h3>
+                                            <small>{{cr.date }} </small>
+                                            </div>
+                                            <p class="mb-1" style="color: green;">{{cr.amount|en2fa}}</p>
+                                            <small>وصول در:</small><br>
+                                            <small>{{cr.pay_date }}</small><br>
+                                            <small>{{cr.text}}</small>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if debt %}
+                    <div class="col-md">
+                        <div class="card">
+                            <div class="card-header bg-warning text-white text-center">
+                                <h3>بدهی</h3>
+                            </div>
+                            <div class="card-body" >
+                                <div class="list-group">
+                                    {% for db in debt|sort(attribute='date', reverse=true) %}
+                                    <a href="/edit_debt/{{db.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h3 class="mb-1">{{db.person|person_name}}</h3>
+                                            <small>{{db.date }} </small>
+                                            
+                                            </div>
+                                            <p class="mb-1" style="color: red;">{{db.amount|en2fa}}</p>
+                                            <small>بازپرداخت در:</small><br>
+                                            <small>{{db.pay_date }} </small><br>
+                                            <small>{{db.text}}</small>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+    </body>
+    <nav class="mobile-nav">
+        <a href="/" class="bloc-icon">
+            <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="/income" class="bloc-icon">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+        <a href="/expense" class="bloc-icon">
+            <i class="fa-solid fa-minus"></i>
+            
+        </a>
+        <a href="/tags" class="bloc-icon">
+            <i class="fa-solid fa-tags"></i>
+        </a>
+        <a href="/logout" class="bloc-icon">
+            <i class="fa-solid fa-power-off"></i>
+        </a>
+    </nav>
+</html>

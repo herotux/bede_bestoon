@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+    <script src="../static/persiandatepicker/jalalidatepicker.js"></script>
+    <link rel="stylesheet" href="../static/persiandatepicker/jalalidatepicker.css" />
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.rtl.css">
+    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.rtl.min.css">
+    <link href="../static/fontawesome/css/fontawesome.css" rel="stylesheet" />
+    <link href="../static/fontawesome/css/brands.css" rel="stylesheet" />
+    <link href="../static/fontawesome/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../static/my.css">
+        <!-- Specific Page CSS goes HERE  -->
+        {% block stylesheets %}
+        {% endblock stylesheets %}
+
+</head>
+    <body>
+        
+        
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-xl">
+              <!-- Logo -->
+              <a class="navbar-brand" href="#">
+                <i class="fa-solid fa-sack-dollar"></i>
+              </a>
+              <!-- Collapse -->
+              <div class="collapse navbar-collapse" id="navbarCollapse">
+                <!-- Nav -->
+                <div class="navbar-nav mx-lg-auto">
+                  <a class="nav-item nav-link active" href="/" aria-current="page">داشبورد</a>
+                  <a class="nav-item nav-link" href="/income">دریافت</a>
+                  <a class="nav-item nav-link" href="/expense">پرداخت</a>
+                  <a class="nav-item nav-link" href="/persons">اشخاص</a>
+                  <a class="nav-item nav-link" href="/tags">تگ ها</a>
+                  <a class="nav-item nav-link" href="/category">دسته‌بندی</a>
+                  <a class="nav-item nav-link" href="/budget">بودجه بندی</a>
+                  <a class="nav-item nav-link" href="/credit">طلب</a>
+                  <a class="nav-item nav-link" href="/debt">بدهی</a>
+                  <a class="nav-item nav-link" href="/install">اقساط</a>
+                  <a class="nav-item nav-link" href="/sooraneh">سورانه </a>
+                </div>
+                <!-- Right navigation -->
+                <div class="navbar-nav ms-lg-4">
+                    <a class="nav-item nav-link" href="/logout">خروج</a>
+                </div>
+              </div>
+            </div>
+          </nav>
+        
+        {% block content %}
+        {% endblock %}
+            
+    </body>
+    <nav class="mobile-nav">
+        <a href="/" class="bloc-icon">
+            <i class="fa-solid fa-house"></i>
+        </a>
+        <a href="/income" class="bloc-icon">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+        <a href="/expense" class="bloc-icon">
+            <i class="fa-solid fa-minus"></i>
+            
+        </a>
+        <a href="/tags" class="bloc-icon">
+            <i class="fa-solid fa-tags"></i>
+        </a>
+        <a href="/logout" class="bloc-icon">
+            <i class="fa-solid fa-power-off"></i>
+        </a>
+    </nav>
+    <script>
+        jalaliDatepicker.startWatch({
+            minDate: "attr",
+            maxDate: "attr",
+            minTime: "attr",
+            maxTime: "attr",
+            hideAfterChange: true,
+            autoHide: true,
+            showTodayBtn: true,
+            showEmptyBtn: true,
+            topSpace: 10,
+            bottomSpace: 30,
+            dayRendering(opt,input){
+                return {
+                    isHollyDay:opt.day==1
+                }
+            }
+        });
+        
+        document.getElementById("aaa").addEventListener("jdp:change", function (e) { console.log(e) });
+    </script>
+    {% block javascripts %}
+    {% endblock javascripts %}
+</html>

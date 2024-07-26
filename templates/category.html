@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %} دسته بندی ها {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3> دسته بندی ها</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/category" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">نام</label>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="نام">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="parent_id">سرگروه</label>
+                                        <select name="parent_id" id="parent_id" class="form-select" aria-label="Default select example">
+                                            <option selected disabled hidden value="">از بین دسته ها انتخاب کنید...</option>
+                                            {% for cat in category %}
+                                                <option value="{{cat.id}}">{{cat.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                              <button type="submit" class="btn btn-primary btn-block">تایید</button>
+                                
+                              </div>
+                        </form>
+
+                        <table class="table table-lg">
+                            <thead>
+                                <tr>
+                                    <th>نام </th>
+                                    <th>سرگروه</th>
+                                    <th>ویرایش</th>
+                                    <th>حذف</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cat in category %}
+                                <tr>
+                                    <td><a href="/category_page/{{cat.id}}" >{{cat.name}}</a></td>
+                                    <td>{{cat.parent_id|cat_name}}</td>
+                                    <td><a href="/edit_category/{{cat.id}}">ویرایش</a></td>
+                                    <td><a href="/delete_category/{{cat.id}}">حذف</a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    
+                </div>
+            </div>
+
+            
+
+        </div>
+
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+    {% endblock javascripts %}
