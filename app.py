@@ -433,7 +433,7 @@ def debt():
         person_id = request.form.get('person_id')
         amount = request.form.get('amount')
         text = request.form.get('text')
-        jdate = equest.form.get('date')
+        jdate = request.form.get('date')
         pay_date = jalali.Persian(request.form.get('pay_date')).gregorian_string()
         date = date_str(jdate)
         debt = Debt(user_id=user_id, person=person_id, amount=amount, text=text, date=date, pay_date=pay_date)
