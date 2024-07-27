@@ -1170,5 +1170,6 @@ def init_db():
 if __name__ == '__main__':
     db.create_all()
     init_db()
+    app.run()
 
     

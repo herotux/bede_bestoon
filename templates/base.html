@@ -21,58 +21,7 @@
 </head>
     <body>
         
-        
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-xl">
-              <!-- Logo -->
-              <a class="navbar-brand" href="#">
-                <i class="fa-solid fa-sack-dollar"></i>
-              </a>
-              <!-- Collapse -->
-              <div class="collapse navbar-collapse" id="navbarCollapse">
-                <!-- Nav -->
-                <div class="navbar-nav mx-lg-auto">
-                  <a class="nav-item nav-link active" href="/" aria-current="page">داشبورد</a>
-                  <a class="nav-item nav-link" href="/income">دریافت</a>
-                  <a class="nav-item nav-link" href="/expense">پرداخت</a>
-                  <a class="nav-item nav-link" href="/persons">اشخاص</a>
-                  <a class="nav-item nav-link" href="/tags">تگ ها</a>
-                  <a class="nav-item nav-link" href="/category">دسته‌بندی</a>
-                  <a class="nav-item nav-link" href="/budget">بودجه بندی</a>
-                  <a class="nav-item nav-link" href="/credit">طلب</a>
-                  <a class="nav-item nav-link" href="/debt">بدهی</a>
-                  <a class="nav-item nav-link" href="/install">اقساط</a>
-                  <a class="nav-item nav-link" href="/sooraneh">سورانه </a>
-                </div>
-                <!-- Right navigation -->
-                <div class="navbar-nav ms-lg-4">
-                    <a class="nav-item nav-link" href="/logout">خروج</a>
-                </div>
-              </div>
-            </div>
-          </nav>
-          <!-- Default dropup button -->
-          <div class="btn-group dropup">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            لینک ها
-            </button>
-            <ul class="dropdown-menu mobile-links">
-            <!-- Dropdown menu links -->
-            <a href="/" aria-current="page">داشبورد</a><br/>
-            <a href="/income">دریافت</a><br/>
-            <a href="/expense">پرداخت</a><br/>
-            <a href="/persons">اشخاص</a><br/>
-            <a href="/tags">تگ ها</a><br/>
-            <a href="/category">دسته‌بندی</a><br/>
-            <a href="/budget">بودجه بندی</a><br/>
-            <a href="/credit">طلب</a><br/>
-            <a href="/debt">بدهی</a><br/>
-            <a href="/install">اقساط</a><br/>
-            <a href="/sooraneh">سورانه </a><br/>
-            </ul>
-        </div>
-        </div>
-        
+        {% include 'includes/navbar.html' %}
         {% block content %}
         {% endblock %}
             
@@ -116,6 +65,7 @@
         
         document.getElementById("aaa").addEventListener("jdp:change", function (e) { console.log(e) });
     </script>
+    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
     {% block javascripts %}
     {% endblock javascripts %}
 </html>
