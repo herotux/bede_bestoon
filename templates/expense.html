@@ -30,7 +30,10 @@
                     <h3> پرداخت </h3>
                 </div>
                 <div class="card-body">
-                    <form action="/expense" method="post">
+                    <button style="margin-bottom: 2rem;" class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        افزودن
+                      </button><br>
+                    <form action="/expense" method="post" class="collapse" id="collapseExample">
                         <div class="form-group">
                           <label class="form-label select-label">طرف حساب</label><a class="fa-solid fa-user-plus" href="/persons"></a>
                           <div id="textSelectdiv">

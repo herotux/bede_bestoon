@@ -143,6 +143,10 @@ class Gregorian:
     def persian_string(self, date_format="{}-{}-{}"):
         return date_format.format(self.persian_year, self.persian_month, self.persian_day)
 
+    # persian date in year/mounth/day format
+    def persian_string_form(self, date_format="{}/{}/{}"):
+        return date_format.format(self.persian_year, self.persian_month, self.persian_day)
+
     def persian_string_monthname(self, date_format="{} {} {}"):
         return date_format.format(self.persian_year, self.persian_monthname, self.persian_day)
 
@@ -151,6 +155,7 @@ class Persian:
     def __init__(self, *date):
         # Parse date
         if len(date) == 1:
+            print(date)
             date = date[0]
             if type(date) is str:
                 m = re.match(r'^(\d{4})\D(\d{1,2})\D(\d{1,2})$', date)

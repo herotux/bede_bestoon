@@ -660,7 +660,7 @@ def income():
         gdate = gdate_str(date)
         text = request.form.get('text')
         tag = request.form.get('tags')
-        income = Income(username=username, person=person, amount=amount, date = gdate_str, text = text, tag_id=tag, category=category)
+        income = Income(username=username, person=person, amount=amount, date = gdate, text = text, tag_id=tag, category=category)
         
         db.session.add(income)
         db.session.commit()
@@ -687,6 +687,7 @@ def edit_income(income_id):
             income.username = current_user.username
             income.person = request.form['person']
             date = request.form['date']
+            print(date)
             gdate = gdate_str(date)
             income.date = gdate
             income.amount = request.form['amount']
@@ -852,8 +853,8 @@ def index():
         inc_dict[cat_id] = cat_inc
         exp_dict[cat_id] = cat_exp
 
-    montinc = Income.query.filter(Income.date.between(gfromdate, today)).all()
-    monthexp = Expense.query.filter(Expense.date.between(gfromdate, today)).all()
+    montinc = Income.query.filter(Income.date.between(gfromdate, today)).filter_by(username=username).all()
+    monthexp = Expense.query.filter(Expense.date.between(gfromdate, today)).filter_by(username=username).all()
     allincs= sumit(montinc)
     allexps = sumit(monthexp)
     return render_template('dashboard.html', incoms=incoms, username=username,
@@ -1057,7 +1058,7 @@ def gdate_date(date):
 
 def compare_date_pay(date):
     today = date.today()
-    #ate_object = datetime.strptime(date, '%Y-%m-%d')
+    #date_object = datetime.strptime(date, '%Y-%m-%d')
     if (date <= today):
         return "payed"
     else:
@@ -1090,7 +1091,7 @@ def gharzhsane_inst(amount, rate, inst_num):
 @app.template_filter()
 def jalali_date(date):
     #date = dateutil.parser.parse(date)
-    jalalidate = jalali.Gregorian(date).persian_string()
+    jalalidate = jalali.Gregorian(date).persian_string_form()
 
     return digits.en_to_fa(jalalidate)
 
@@ -1105,7 +1106,7 @@ def jalali_date_monthname(date):
 @app.template_filter()
 def jalali_date_en(date):
     #date = dateutil.parser.parse(date)
-    jalalidate = jalali.Gregorian(date).persian_string()
+    jalalidate = jalali.Gregorian(date).persian_string_form()
 
     return jalalidate
 
@@ -1146,6 +1147,162 @@ def cat_name(cat_id):
         return cat.name
     else:
         return "بدون دسته بندی"
+
+
+
+
+
+
+
+# API for User registration
+@app.route('/api/register', methods=['POST'])
+def api_register():
+    data = request.get_json()
+    new_user = User(
+        username=data['username'],
+        first_name=data['first_name'],
+        last_name=data['last_name'],
+        password=data['password']
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'User registered successfully'}), 201
+
+# API for User login
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username'], password=data['password']).first()
+    if user:
+        login_user(user)
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        return jsonify({'message': 'Bad username or password'}), 401
+
+
+
+# API برای مشاهده همه کاربران
+@app.route('/api/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return jsonify([{"id": user.id, "username": user.username, "first_name": user.first_name, "last_name": user.last_name} for user in users])
+
+# API برای مشاهده یک کاربر خاص
+@app.route('/api/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get_or_404(user_id)
+    return jsonify({"id": user.id, "username": user.username, "first_name": user.first_name, "last_name": user.last_name})
+
+# API برای ثبت نام کاربر
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    new_user = User(username=data['username'], first_name=data['first_name'], last_name=data['last_name'], password=data['password'])
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({"message": "User created successfully"}), 201
+
+# API برای به‌روزرسانی یک کاربر
+@app.route('/api/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.get_json()
+    user = User.query.get_or_404(user_id)
+    user.username = data.get('username', user.username)
+    user.first_name = data.get('first_name', user.first_name)
+    user.last_name = data.get('last_name', user.last_name)
+    db.session.commit()
+    return jsonify({"message": "User updated successfully"})
+
+# API برای حذف یک کاربر
+@app.route('/api/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"message": "User deleted successfully"})
+
+
+
+
+
+# API for creating a new person
+@app.route('/api/persons', methods=['POST'])
+@login_required
+def api_create_person():
+    data = request.get_json()
+    new_person = Persons(
+        username=current_user.username,
+        first_name=data['first_name'],
+        last_name=data['last_name'],
+        relation=data['relation']
+    )
+    db.session.add(new_person)
+    db.session.commit()
+    return jsonify({'message': 'Person added successfully'}), 201
+
+# API for getting all persons
+@app.route('/api/persons', methods=['GET'])
+@login_required
+def api_get_persons():
+    persons = Persons.query.filter_by(username=current_user.username).all()
+    return jsonify([{"id": person.id, "first_name": person.first_name, "last_name": person.last_name, "relation": person.relation} for person in persons]), 200
+
+# API for creating income
+@app.route('/api/income', methods=['POST'])
+@login_required
+def api_create_income():
+    data = request.get_json()
+    new_income = Income(
+        username=current_user.username,
+        person=data['person'],
+        amount=data['amount'],
+        date=data['date'],
+        text=data['text'],
+        tag_id=data.get('tag_id'),
+        category=data.get('category')
+    )
+    db.session.add(new_income)
+    db.session.commit()
+    return jsonify({'message': 'Income added successfully'}), 201
+
+# API for fetching income
+@app.route('/api/income', methods=['GET'])
+@login_required
+def api_get_income():
+    income_entries = Income.query.filter_by(username=current_user.username).all()
+    return jsonify([{"id": inc.id, "amount": inc.amount, "date": inc.date, "text": inc.text} for inc in income_entries]), 200
+
+# API for creating expense
+@app.route('/api/expense', methods=['POST'])
+@login_required
+def api_create_expense():
+    data = request.get_json()
+    new_expense = Expense(
+        username=current_user.username,
+        person=data['person'],
+        amount=data['amount'],
+        date=data['date'],
+        text=data['text'],
+        tag_id=data.get('tag_id'),
+        category=data.get('category')
+    )
+    db.session.add(new_expense)
+    db.session.commit()
+    return jsonify({'message': 'Expense added successfully'}), 201
+
+# API for fetching expenses
+@app.route('/api/expense', methods=['GET'])
+@login_required
+def api_get_expense():
+    expense_entries = Expense.query.filter_by(username=current_user.username).all()
+    return jsonify([{"id": exp.id, "amount": exp.amount, "date": exp.date, "text": exp.text} for exp in expense_entries]), 200
+
+# Add similar API routes for other features like tags, categories, budgets, debts, credits, etc.
+
+
+
+
+
 
 
 

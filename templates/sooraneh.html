@@ -24,7 +24,7 @@
                             <a href="/edit_income/{{income.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
                                 <div class="d-flex w-100 justify-content-between">
                                 <h3 class="mb-1">{{income.person|person_name}}</h3>
-                                <small>{{income.date }} </small>
+                                <small>{{income.date|jalali_date }} </small>
                                 </div>
                                 <p class="mb-1" style="color: green;">{{income.amount|en2fa}}</p>
                                 <h5 class="mb-1">{{income.category|cat_name}}</h5>

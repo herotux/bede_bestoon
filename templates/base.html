@@ -22,6 +22,30 @@
     <body>
         
         {% include 'includes/navbar.html' %}
+        <span  onclick="openNav()">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1899/xlink" version="1.1" x="0px" y="0px" width="26px" height="18px" viewBox="0 0 26 18" enable-background="new 0 0 26 18" xml:space="preserve"><path d="z"/><g>
+              <rect y="1" width="26" height="3" rx="2" ry="2" class="gc"/>
+              <rect y="8" width="26" height="3" rx="2" ry="2" class="gc"/>
+              <rect y="15" width="26" height="3" rx="2" ry="2" class="gc"/></g>
+              <path d="z"/>
+            </svg>
+          </span>
+          <div class="hs-sidebar" id="mySidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+             <!-- Dropdown menu links -->
+             <a href="/" aria-current="page">داشبورد</a><br/>
+             <a href="/income">دریافت</a><br/>
+             <a href="/expense">پرداخت</a><br/>
+             <a href="/persons">اشخاص</a><br/>
+             <a href="/tags">تگ ها</a><br/>
+             <a href="/category">دسته‌بندی</a><br/>
+             <a href="/budget">بودجه بندی</a><br/>
+             <a href="/credit">طلب</a><br/>
+             <a href="/debt">بدهی</a><br/>
+             <a href="/install">اقساط</a><br/>
+             <a href="/sooraneh">سورانه </a><br/>
+                
+        </div>   
         {% block content %}
         {% endblock %}
             
@@ -66,6 +90,19 @@
         document.getElementById("aaa").addEventListener("jdp:change", function (e) { console.log(e) });
     </script>
     <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+        function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+        function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        } 
+    </script>
     {% block javascripts %}
     {% endblock javascripts %}
 </html>
