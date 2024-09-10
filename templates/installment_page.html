@@ -18,7 +18,7 @@
                                 <h5 class="mb-1">{{inst.person|person_name}}</h5>
                                 <p class="mb-1" style="color: green;">مبلغ کل وام: {{inst.amount|en2fa}}</p>
                                 
-                                <p class="mb-1">قسط عقب افتاده  : {{expired_count}}</p>
+                                <p class="mb-1">قسط عقب افتاده  : {{expired_count|en2fa}}</p>
                                 <p class="mb-1">مبلغ عقب افتاده  : {{expired_amount|en2fa}}</p>
                                
                                 
@@ -37,40 +37,40 @@
                               </button><br>
                             <div class="collapse" id="collapseExample">
                                 <div class="list-group">
-                                    {% for i in range(inst.inst_num) %}
+                                    {% for item in inst_detail %}
                                     <div class="list-group-item list-group-item-action flex-column align-items-start">
                                         
                                         <div class="d-flex w-100 justify-content-between">
-                                             <h3 class="mb-1">قسط {{list_data[i][0]|en2fa}}</h3>
+                                             <h3 class="mb-1">قسط {{item.inst_num|en2fa}}</h3>
                                              <small>{{inst.first_date|jalali_date}} </small>
                                          </div>
                                          <div class="d-flex ">
                                             <p class="mb-1">وضعیت: </p>
-                                         {% if list_data[i][1] == "payed" %}
+                                         {% if item.payment_status == "payed" %}
                                          <p class="mb-1" style="color: green;">پرداخت شده</p>
-                                            {% elif list_data[i][1] == "notpayed" %}
+                                            {% elif item.payment_status == "notpayed" %}
                                             <p class="mb-1" style="color: red;"> پرداخت نشده</p>
                                             {% endif %}
                                          </div>
                                          
-                                         <h5 class="mb-1">مبلغ: {{list_data[i][3]|en2fa}}</h5> 
+                                         <h5 class="mb-1">مبلغ: {{item.amount|en2fa}}</h5> 
                                          <div class="d-flex ">
                                             <p> تاریخ بازپرداخت: <p>
-                                                <small>{{list_data[i][2]|jalali_date}}</small><br>
+                                                <small>{{item.payment_date|jalali_date}}</small><br>
                                          </div>
-                                         {% if list_data[i][1] == "notpayed" %}
-                                            {{list_data[i][2]|comparison}}
+                                         {% if item.payment_status == "notpayed" %}
+                                            {{item.payment_date|comparison}}
                                          {% endif %}
                                          
-                                         <p>تعداد اقساط: {{inst.inst_num|en2fa}} قسط</p>
+                                         <p>تعداد اقساط: {{item.inst_num|en2fa}} قسط</p>
 
-                                            {% if list_data[i][1] == "payed" %}
-                                            <a class="btn btn-danger btn-block" href="/inst_status/{{inst.id}}/{{list_data[i][0]}}">
+                                            {% if item.payment_status == "payed" %}
+                                            <a class="btn btn-danger btn-block" href="/inst_status/{{inst.id}}/{{item.inst_num}}">
                                             تغییر به پرداخت نشده
                                             </a>
-                                            {% elif list_data[i][1] == "notpayed" %}
+                                            {% else %}
      
-                                            <a class="btn btn-success btn-block" href="/inst_status/{{inst.id}}/{{list_data[i][0]}}">
+                                            <a class="btn btn-success btn-block" href="/inst_status/{{inst.id}}/{{item.inst_num}}">
                                             تغییر به پرداخت شده
                                           </a>
                                           {% endif %}

@@ -189,6 +189,8 @@
                                     <small>دوره بازپرداخت: {{inst.pay_period|en2fa}} ماه یکبار</small><br>
                                     <small>تعداد اقساط: {{inst.inst_num|en2fa}} قسط</small>
                                 </a>
+                                <a class="btn btn-danger btn-block" href="/delete_inst/{{inst.id}}">حذف</a> 
+
                                 {% endfor %}
                         </div>
 

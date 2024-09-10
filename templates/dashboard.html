@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,194 +15,305 @@
     <link rel="stylesheet" href="../static/my.css">
 
 </head>
-    <body>
-        
-        {% include 'includes/navbar.html' %}
-        <span  onclick="openNav()">
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1899/xlink" version="1.1" x="0px" y="0px" width="26px" height="18px" viewBox="0 0 26 18" enable-background="new 0 0 26 18" xml:space="preserve"><path d="z"/><g>
-              <rect y="1" width="26" height="3" rx="2" ry="2" class="gc"/>
-              <rect y="8" width="26" height="3" rx="2" ry="2" class="gc"/>
-              <rect y="15" width="26" height="3" rx="2" ry="2" class="gc"/></g>
-              <path d="z"/>
-            </svg>
-          </span>   
-            <header class="container-fluid p-5">
-                {% if person %}
-                    <h1> {{person.id|person_name}}</h1>
-                {% else %}
-                    <h1>بده بستون</h1>
-                {% endif %}
-            </header>
-            {% if not person %}
-            {% include 'includes/sidebar.html' %}
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md">
-                            <div class="card">
-                                <div class="card-header pink text-white text-center">
-                                    <h3>گزارش ماهیانه</h3>
-                                </div>
-                                <div class="card-body" >
-                                    <div class="row">
-                                        <div class="col-md">
-                                            <p>مجموع درآمد  {{allincs|en2fa}}</p>
-                                            {% for key, value in inc_dict.items() %} 
-                                                {% if value !=0 %}
-                                                    <p>{{key|cat_name}}  {{value|en2fa}}<br></p>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                        <div class="col-md">
-                                            <p>مجموع هزینه {{allexps|en2fa}}</p>
-                                            {% for key, value in exp_dict.items() %} 
-                                                {% if value !=0 %}
-                                                    <p>{{key|cat_name}}  {{value|en2fa}}<br></p>
-                                                {% endif %}
+
+<body>
+
+    {% include 'includes/navbar.html' %}
+    <span onclick="openNav()">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1899/xlink" version="1.1" x="0px" y="0px"
+            width="26px" height="18px" viewBox="0 0 26 18" enable-background="new 0 0 26 18" xml:space="preserve">
+            <path d="z" />
+            <g>
+                <rect y="1" width="26" height="3" rx="2" ry="2" class="gc" />
+                <rect y="8" width="26" height="3" rx="2" ry="2" class="gc" />
+                <rect y="15" width="26" height="3" rx="2" ry="2" class="gc" />
+            </g>
+            <path d="z" />
+        </svg>
+    </span>
+    <header class="container-fluid p-5">
+        {% if person %}
+        <h1> {{person.id|person_name}}</h1>
+        {% else %}
+        <h1>بده بستون</h1>
+        {% endif %}
+    </header>
+
+    {% if not person %}
+    {% include 'includes/sidebar.html' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header blue text-white text-center">
+                        <h3>نزدیک ترین سررسید ها</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                        {% if monthdb %}
+                            <div class="col-md">
+                                <div class="card">
+                                    <div class="card-header bg-warning text-white text-center">
+                                        <h3>سررسید بدهی ها</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group">
+                                            {% for db in month %}
+                                            <a href="/debt_page/{{db.id}}"
+                                                class="list-group-item list-group-item-action flex-column align-items-start">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <small>{{ db.pay_date|jalali_date }} </small>
+                                                </div>
+                                                <p class="mb-1" style="color: green;">مبلغ : 
+                                                    {{db.amount|en2fa }}</p>
+                                                <h5 class="mb-1">{{ db.person|person_name }}</h5>
+
+                                            </a>
+
                                             {% endfor %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </br>
-            {% endif %}
-        
-                <div class="row">
-                    {% if incoms %}      
-                    <div class="col-md">
-                        <div class="card">
-                            <div class="card-header bg-success text-white text-center">
-                                <h3>دریافت</h3>
-                            </div>
-                            <div class="card-body" > 
-                                <div class="list-group">
-                                    {% for income in incoms|sort(attribute='date', reverse=true) %}
-                                    <a href="/edit_income/{{income.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
-                                        <div class="d-flex w-100 justify-content-between">
-                                        <h3 class="mb-1">{{income.category|cat_name}}</h3>
-                                        <small>{{income.date|jalali_date}}  </small>
+                            {% endif %}
+                            {% if monthcr %}
+                                <div class="col-md">
+                                    <div class="card">
+                                        <div class="card-header bg-warning text-white text-center">
+                                            <h3>سررسید طلب ها</h3>
                                         </div>
-                                        <p class="mb-1" style="color: green;">{{income.amount|en2fa}}</p>
-                                        <h5 class="mb-1">{{income.person|person_name}}</h5>
-                                        <small>{{income.text}}</small>
-                                    </a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
+                                        <div class="card-body">
+                                            <div class="list-group">
+                                                {% for db in monthcr %}
+                                                <a href="/crerdit_page/{{cr.id}}"
+                                                    class="list-group-item list-group-item-action flex-column align-items-start">
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        <small>{{ cr.pay_date|jalali_date }} </small>
+                                                    </div>
+                                                    <p class="mb-1" style="color: green;">مبلغ : 
+                                                        {{cr.amount|en2fa }}</p>
+                                                    <h5 class="mb-1">{{ cr.person|person_name }}</h5>
 
-                    {% if expenses %}
-                    <div class="col-md">
-                        <div class="card">
-                            <div class="card-header bg-warning text-white text-center">
-                                <h3>پرداخت</h3>
-                            </div>
-                            <div class="card-body" > 
-                                <div class="list-group">
-                                    {% for expense in expenses|sort(attribute='date', reverse=true) %}
-                                    <a href="/edit_expense/{{expense.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h3 class="mb-1">{{expense.category|cat_name}}</h3>
-                                            <small>{{expense.date|jalali_date }} </small>
+                                                </a>
+
+                                                {% endfor %}
                                             </div>
-                                            <p class="mb-1" style="color: red;">{{expense.amount|en2fa}}</p>
-                                            <h5 class="mb-1">{{expense.person|person_name}}</h5>
-                                            <small>{{expense.text}}</small>
-                                    </a>
-                                    {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
+
+                            {% if installment_summary %}
+                                <div class="col-md">
+                                    <div class="card">
+                                        <div class="card-header bg-warning text-white text-center">
+                                            <h3>سررسید قسط ها</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="list-group">
+                                                {% for installment in installment_summary %}
+                                                <a href="/inst_page/{{installment.id}}"
+                                                    class="list-group-item list-group-item-action flex-column align-items-start">
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        <h3 class="mb-1">{{ installment.text }}</h3>
+                                                        <small>{{ installment.payment_date|jalali_date }} </small>
+                                                    </div>
+                                                    <p class="mb-1" style="color: green;">مبلغ : {{
+                                                        installment.total_amount|en2fa }}</p>
+                                                    <h5 class="mb-1">{{ installment.person|person_name }}</h5>
+
+                                                </a>
+
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endif %}
-                    {% if credit %}
-                    <div class="col-md">
-                        <div class="card">
-                            <div class="card-header bg-warning text-white text-center">
-                                <h3>طلب</h3>
-                            </div>
-                            <div class="card-body" >
-                                <div class="list-group">
-                                    {% for cr in credit|sort(attribute='date', reverse=true) %}
-                                    <a href="/edit_credit/{{cr.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h3 class="mb-1">{{cr.person|person_name}}</h3>
-                                            <small>{{cr.date }} </small>
-                                            </div>
-                                            <p class="mb-1" style="color: green;">{{cr.amount|en2fa}}</p>
-                                            <small>وصول در:</small><br>
-                                            <small>{{cr.pay_date }}</small><br>
-                                            <small>{{cr.text}}</small>
-                                    </a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if debt %}
-                    <div class="col-md">
-                        <div class="card">
-                            <div class="card-header bg-warning text-white text-center">
-                                <h3>بدهی</h3>
-                            </div>
-                            <div class="card-body" >
-                                <div class="list-group">
-                                    {% for db in debt|sort(attribute='date', reverse=true) %}
-                                    <a href="/edit_debt/{{db.id}}" class="list-group-item list-group-item-action flex-column align-items-start">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <h3 class="mb-1">{{db.person|person_name}}</h3>
-                                            <small>{{db.date }} </small>
-                                            
-                                            </div>
-                                            <p class="mb-1" style="color: red;">{{db.amount|en2fa}}</p>
-                                            <small>بازپرداخت در:</small><br>
-                                            <small>{{db.pay_date }} </small><br>
-                                            <small>{{db.text}}</small>
-                                    </a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                 </div>
-    </body>
-    <nav class="mobile-nav">
-        <a href="/" class="bloc-icon">
-            <i class="fa-solid fa-house"></i>
-        </a>
-        <a href="/income" class="bloc-icon">
-            <i class="fa-solid fa-plus"></i>
-        </a>
-        <a href="/expense" class="bloc-icon">
-            <i class="fa-solid fa-minus"></i>
-            
-        </a>
-        <a href="/tags" class="bloc-icon">
-            <i class="fa-solid fa-tags"></i>
-        </a>
-        <a href="/logout" class="bloc-icon">
-            <i class="fa-solid fa-power-off"></i>
-        </a>
-    </nav>
-    <script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+            </div>
+        </div>
+        </br>
 
 
-    <script>
-        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
-        function openNav() {
+        <div class="row">
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header pink text-white text-center">
+                        <h3>گزارش ماهیانه</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md">
+                                <h2>درآمد</h2>
+                                <hr>
+                                <p>مجموع درآمد {{allincs|en2fa}}</p>
+                                {% for key, value in inc_dict.items() %}
+                                {% if value !=0 %}
+                                <p>{{key|cat_name}} {{value|en2fa}}<br></p>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="col-md">
+                                <h2>هزینه</h2>
+                                <hr>
+                                <p>مجموع هزینه {{allexps|en2fa}}</p>
+                                {% for key, value in exp_dict.items() %}
+                                {% if value !=0 %}
+                                <p>{{key|cat_name}} {{value|en2fa}}<br></p>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </br>
+        {% endif %}
+
+        <div class="row">
+            {% if incoms %}
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header bg-success text-white text-center">
+                        <h3>دریافت</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for income in incoms|sort(attribute='date', reverse=true) %}
+                            <a href="/edit_income/{{income.id}}"
+                                class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">{{income.category|cat_name}}</h3>
+                                    <small>{{income.date|jalali_date}} </small>
+                                </div>
+                                <p class="mb-1" style="color: green;">{{income.amount|en2fa}}</p>
+                                <h5 class="mb-1">{{income.person|person_name}}</h5>
+                                <small>{{income.text}}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if expenses %}
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header bg-warning text-white text-center">
+                        <h3>پرداخت</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for expense in expenses|sort(attribute='date', reverse=true) %}
+                            <a href="/edit_expense/{{expense.id}}"
+                                class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">{{expense.category|cat_name}}</h3>
+                                    <small>{{expense.date|jalali_date }} </small>
+                                </div>
+                                <p class="mb-1" style="color: red;">{{expense.amount|en2fa}}</p>
+                                <h5 class="mb-1">{{expense.person|person_name}}</h5>
+                                <small>{{expense.text}}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if credit %}
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header bg-warning text-white text-center">
+                        <h3>طلب</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for cr in credit|sort(attribute='date', reverse=true) %}
+                            <a href="/edit_credit/{{cr.id}}"
+                                class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">{{cr.person|person_name}}</h3>
+                                    <small>{{cr.date }} </small>
+                                </div>
+                                <p class="mb-1" style="color: green;">{{cr.amount|en2fa}}</p>
+                                <small>وصول در:</small><br>
+                                <small>{{cr.pay_date }}</small><br>
+                                <small>{{cr.text}}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if debt %}
+            <div class="col-md">
+                <div class="card">
+                    <div class="card-header bg-warning text-white text-center">
+                        <h3>بدهی</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            {% for db in debt|sort(attribute='date', reverse=true) %}
+                            <a href="/edit_debt/{{db.id}}"
+                                class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h3 class="mb-1">{{db.person|person_name}}</h3>
+                                    <small>{{db.date }} </small>
+
+                                </div>
+                                <p class="mb-1" style="color: red;">{{db.amount|en2fa}}</p>
+                                <small>بازپرداخت در:</small><br>
+                                <small>{{db.pay_date }} </small><br>
+                                <small>{{db.text}}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+</body>
+<nav class="mobile-nav">
+    <a href="/" class="bloc-icon">
+        <i class="fa-solid fa-house"></i>
+    </a>
+    <a href="/income" class="bloc-icon">
+        <i class="fa-solid fa-plus"></i>
+    </a>
+    <a href="/expense" class="bloc-icon">
+        <i class="fa-solid fa-minus"></i>
+
+    </a>
+    <a href="/tags" class="bloc-icon">
+        <i class="fa-solid fa-tags"></i>
+    </a>
+    <a href="/logout" class="bloc-icon">
+        <i class="fa-solid fa-power-off"></i>
+    </a>
+</nav>
+<script src="../static/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+    function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
-        }
+    }
 
-        /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
-        function closeNav() {
+    /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+    function closeNav() {
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
-        } 
-    </script>
+    } 
+</script>
+
 </html>

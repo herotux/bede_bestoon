@@ -134,7 +134,21 @@ class Installments(db.Model):
     inst_rate = db.Column(db.Integer, nullable=True) #نرخ سود به درصد
     first_date = db.Column(db.String(10), nullable=False)
     pay_period = db.Column(db.Integer, nullable=False) # 1 for month ,2 for 2 month , ...
-    inst_data = db.Column(db.JSON, nullable=True)
+    # inst_data = db.Column(db.JSON, nullable=True)
+
+    installment_details = db.relationship('InstallmentDetail', backref='installment', cascade="all,delete", lazy=True)
+
+
+
+class InstallmentDetail(db.Model):
+    __tablename__ = 'installment_details'
+
+    id = db.Column(db.Integer, primary_key=True)
+    installment_id = db.Column(db.Integer, db.ForeignKey('installments.id'), nullable=False)
+    inst_num = db.Column(db.Integer, nullable=False)  # installment number
+    payment_status = db.Column(db.String(20), nullable=False)  # payment status (paid/unpaid)
+    payment_date = db.Column(db.String(10), nullable=True)  # date of payment
+    amount = db.Column(db.Integer, nullable=False)  # amount paid
 
 #مدیریت اقساط
 #نام وام مبلغ تعداد اقساط موعد قسط میانگین مبلغ مشاهده اقساط وام پرداخت قسط
@@ -180,37 +194,42 @@ def install():
         first_date = gdate_str(date)
         pay_period = request.form.get('pay_period')
         date_for_loop = gdate_date(date)
-        inst_list = []
-        #this loop is for calculate date 30 days apart for each installments and save thems in a list 
-        for i in range(int(inst_num)):
-            amount_inst = calculate_inst(int(amount), int(inst_rate), int(inst_num))
-            #amount_inst = gharzhsane_inst(amount, inst_rate, inst_num)
-            jdate_in_loop = jalali.Gregorian(date_for_loop).persian_tuple()
-            jmonth_inloop = jdate_in_loop[1]
-            if jmonth_inloop < 7:
-                days = 31
-            elif jmonth_inloop > 6 and jmonth_inloop < 12:
-                days = 30
-            
-            elif jmonth_inloop == 12 and is_leap(jdate_in_loop[0]):
-                days = 30
-            else:
-                days = 29
-            if payed_insts:
-                pay_hist = compare_date_pay(date_for_loop)
-            else:
-                pay_hist = "notpayed"
 
-            date_for_loop = date_for_loop + timedelta(days = days)
-            installment_date = date_for_loop
-            inst_list.append([i, pay_hist, installment_date.strftime("%Y-%m-%d"), round(amount_inst)])
-        inst_list = json.dumps(inst_list)
             
         install = Installments(user_id=user_id, person=person_id, amount=amount, text=text, first_date=first_date,
-                                    pay_period=pay_period, inst_data=inst_list, inst_rate=inst_rate, inst_num=inst_num)
+                                    pay_period=pay_period, inst_rate=inst_rate, inst_num=inst_num)
         db.session.add(install)
         db.session.commit()
-        flash('installment added successful!', 'success')
+
+
+        # ثبت جزئیات اقساط
+
+        for i in range(1, int(inst_num) + 1):
+            amount_inst = calculate_inst(int(amount), int(inst_rate), int(inst_num))
+            jdate_in_loop = jalali.Gregorian(date_for_loop).persian_tuple()
+            jmonth_inloop = jdate_in_loop[1]
+            days = 31 if jmonth_inloop < 7 else 30 if jmonth_inloop < 12 else 30 if is_leap(jdate_in_loop[0]) else 29
+            date_for_loop = date_for_loop + timedelta(days=days)
+            pay_hist = compare_date_pay(date_for_loop) if payed_insts else "notpayed"
+
+            installment_detail = InstallmentDetail(
+                installment_id=install.id,
+                inst_num=i,
+                payment_status=pay_hist,
+                payment_date=date_for_loop.strftime("%Y-%m-%d"),
+                amount=round(amount_inst)
+            )
+            db.session.add(installment_detail)
+
+        try:
+            db.session.commit()
+            flash('installment added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash('Error occurred while adding installment: {}'.format(str(e)), 'danger')
+
+
+
         return redirect(url_for('install'))
 
 @app.route('/install_spec', methods=['GET', 'POST'])
@@ -234,44 +253,41 @@ def install_spec():
         inst_list = []
         amount_inst_list = gharzhsane_inst(amount, inst_rate, inst_num)
         #this loop is for calculate date 30 days apart for each installments and save thems in a list 
-        i =1
-        while i <= int(inst_num):
-            #amount_inst = calculate_inst(int(amount), int(inst_rate), int(inst_num))
-            for item in amount_inst_list:
-                if item[0] == i:
-                    amount_inst = item[1]
-                    break
-                else:
-                    amount_inst = int(amount)/(int(inst_num) - int(inst_num)/12)
-
-            jdate_in_loop = jalali.Gregorian(date_for_loop).persian_tuple()
-            jmonth_inloop = jdate_in_loop[1]
-            if jmonth_inloop < 7:
-                days = 31
-            elif jmonth_inloop > 6 and jmonth_inloop < 12:
-                days = 30
-            
-            elif jmonth_inloop == 12 and is_leap(jdate_in_loop[0]):
-                days = 30
-            else:
-                days = 29
-            if payed_insts:
-                pay_hist = compare_date_pay(date_for_loop)
-            else:
-                pay_hist = "notpayed"
+       
 
             
-            installment_date = date_for_loop
-            inst_list.append([i, pay_hist, installment_date.strftime("%Y-%m-%d"), round(amount_inst)])
-            date_for_loop = date_for_loop + timedelta(days = days)
-            i+=1
-        inst_list = json.dumps(inst_list)
             
         install = Installments(user_id=user_id, person=person_id, amount=amount, text=text, first_date=first_date,
-                                    pay_period=pay_period, inst_data=inst_list, inst_rate=inst_rate, inst_num=inst_num)
+                                    pay_period=pay_period, inst_rate=inst_rate, inst_num=inst_num)
         db.session.add(install)
         db.session.commit()
-        flash('installment added successful!', 'success')
+
+
+        # ثبت جزئیات اقساط
+        for i in range(1, int(inst_num) + 1):
+            amount_inst = next((item[1] for item in amount_inst_list if item[0] == i), int(amount) / int(int(inst_num) - int(inst_num) / 12))
+            jdate_in_loop = jalali.Gregorian(date_for_loop).persian_tuple()
+            jmonth_inloop = jdate_in_loop[1]
+            days = 31 if jmonth_inloop < 7 else 30 if jmonth_inloop < 12 else 30 if is_leap(jdate_in_loop[0]) else 29
+            date_for_loop = date_for_loop + timedelta(days=days)
+            pay_hist = compare_date_pay(date_for_loop) if payed_insts else "notpayed"
+
+            installment_detail = InstallmentDetail(
+                installment_id=install.id,
+                inst_num=i,
+                payment_status=pay_hist,
+                payment_date=date_for_loop.strftime("%Y-%m-%d"),
+                amount=round(amount_inst)
+            )
+            db.session.add(installment_detail)
+
+        try:
+            db.session.commit()
+            flash('installment added successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash('Error occurred while adding installment: {}'.format(str(e)), 'danger')
+        
         return redirect(url_for('install'))
 
 
@@ -279,6 +295,7 @@ def install_spec():
 @login_required
 def inst_page(inst_id):
     installment = Installments.query.filter_by(user_id=current_user.id, id = inst_id).first()
+    installment_detail = InstallmentDetail.query.filter_by(installment_id = inst_id).all()
     today = datetime.today()
 
     if installment:
@@ -286,20 +303,20 @@ def inst_page(inst_id):
         expired_count = 0
         payed_amount = 0
         amount = installment.amount
-        inst_data = installment.inst_data
-        list_data = ast.literal_eval(inst_data)
+        #inst_data = installment.inst_data
+        #list_data = ast.literal_eval(inst_data)
         first_inst = Installments.first_date
-        for item in list_data:
-            if item[1] == "payed":
-                payed_amount += int(item[3])      
+        for item in installment_detail:
+            if item.payment_status == "payed":
+                payed_amount += int(item.amount)      
             else:
-                date_object = datetime.strptime(item[2], '%Y-%m-%d')
+                date_object = datetime.strptime(item.payment_date, '%Y-%m-%d')
                 if date_object < today:
-                    expired_amount += int(item[3])
+                    expired_amount += int(item.amount)
                     expired_count += 1
         payed_precent = round((payed_amount/amount) *100)
         exp_precent = round((expired_amount/amount) *100)
-        return render_template('installment_page.html', inst = installment, list_data=list_data, payed_amount=payed_amount,
+        return render_template('installment_page.html', inst = installment, inst_detail=installment_detail, payed_amount=payed_amount,
          expired_amount=expired_amount, expired_count=expired_count, payed_precent=payed_precent, exp_precent=exp_precent)
     else:
         return render_template('404.html')
@@ -324,18 +341,13 @@ def delete_inst(inst_id):
 @login_required
 def inst_status(inst_id, inst_num):
     installment = Installments.query.filter_by(id = inst_id).first()
-    if installment:
-        inst_data = installment.inst_data
-        inst_data = ast.literal_eval(inst_data)
-        print(type(inst_data))
-        inst2 = installment
-        inst_dataa = inst2.inst_data
-        if inst_data[inst_num-1][1] == "notpayed":
-           inst_data[inst_num-1][1] = "payed"
+    installment_detail = InstallmentDetail.query.filter_by(installment_id = inst_id, inst_num=inst_num).first()
+    if installment_detail:
+        
+        if installment_detail.payment_status == "notpayed":
+           installment_detail.payment_status = "payed"
         else:
-            inst_data[inst_num-1][1] = "notpayed"
-        print(inst_data[inst_num-1][1])
-        installment.inst_data = json.dumps(inst_data)  # Convert dictionary to JSON string
+             installment_detail.payment_status = "notpayed"
         db.session.commit()
         print('installment status changed successfully')
         return redirect(url_for('install'))
@@ -826,14 +838,33 @@ def login():
     return render_template('login.html')
 
 
+def endmounth():
+    today = date.today()
+    jdate = jalali.Gregorian(today).persian_tuple()
+    
+    jmonth = jdate[1]
+    jday = jdate[2]
+    if jmonth < 7:
+        days = 31
+    elif jmonth > 6 and jmonth < 12:
+        days = 30
+    elif jmonth == 12 and is_leap(jdate[0]):
+        days = 30
+    else:
+        days = 29
+    
+    fday = days - int(jday)
+    fdate = today + timedelta(days = fday)
+    return fdate
 
 @app.route('/')
 @login_required
 def index():
-    today = date.today()
+    today = datetime.now().date()
     jtoday = jalali.Gregorian(today).persian_tuple()
     the_day = jtoday[2]
     gfromdate = today - timedelta(days = the_day)
+    end_mounth = endmounth()
     username = current_user.username
     incoms = Income.query.filter_by(username=username).all()
     expenses = Expense.query.filter_by(username=username).all()
@@ -857,8 +888,44 @@ def index():
     monthexp = Expense.query.filter(Expense.date.between(gfromdate, today)).filter_by(username=username).all()
     allincs= sumit(montinc)
     allexps = sumit(monthexp)
+    monthdb = Income.query.filter(Debt.pay_date.between(today, end_mounth)).filter_by(username=username).all()
+    monthcr = Income.query.filter(Credit.pay_date.between(today, end_mounth)).filter_by(username=username).all()
+
+    installments = Installments.query.filter_by(user_id=current_user.id).all()
+
+    # تعیین تاریخ امروز و پایان ماه
+    end_month = (today.replace(day=1) + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+
+    # لیست برای نگهداری اطلاعات اقساط
+    installment_summary = []
+
+    # حلقه برای دریافت مبلغ قسط‌های این ماه
+    for ins in installments:
+        ins_id = ins.id
+        
+        # فیلتر کردن اقساط بر اساس تاریخ
+        month_inst = InstallmentDetail.query.filter(
+            InstallmentDetail.payment_date.between(today, end_month)
+        ).filter_by(installment_id=ins_id).all()
+        
+        # جمع آوری مبلغ قسط‌ها
+        total_amount = sum(inst.amount for inst in month_inst)  # فرض می‌کنیم که هر قسط دارای خاصیت amount است
+        
+        # اگر مبلغ کل قسط‌ها بزرگتر از صفر باشد
+        if total_amount > 0:
+            for payment in month_inst:
+                installment_summary.append({
+                    'id': ins.id,
+                    'person': ins.person,  # نام شخص مربوطه
+                    'text': ins.text,      # متن قسط
+                    'payment_date': payment.payment_date,  # تاریخ پرداخت
+                    'total_amount': payment.amount  # مبلغ قسط
+                })
+
+
     return render_template('dashboard.html', incoms=incoms, username=username,
-     expenses=expenses, allincs=allincs, allexps=allexps, montinc=montinc, inc_dict=inc_dict, exp_dict = exp_dict,today=today)
+     expenses=expenses, allincs=allincs, allexps=allexps, montinc=montinc, inc_dict=inc_dict,
+     exp_dict = exp_dict,today=today, installment_summary=installment_summary, monthdb=monthdb, monthcr=monthcr)
     
 
 
@@ -1055,14 +1122,23 @@ def gdate_date(date):
     gdate = jalali.Persian(date).gregorian_datetime()
     return gdate
 
+        
 
-def compare_date_pay(date):
-    today = date.today()
-    #date_object = datetime.strptime(date, '%Y-%m-%d')
-    if (date <= today):
-        return "payed"
-    else:
+def compare_date_pay(date1):
+    date2 = date.today()
+    print('Date1:', date1)
+    print('Date2:', date2)
+
+    if date1 > date2:
+        print('Date1 is lower than date2')
+        print("notpayed")
         return "notpayed"
+    else:
+        print('Date1 is greater than date2')
+        print("payed")
+        return "payed"
+        
+
 
 def calculate_inst(amount, rate, inst_num):
     inst = (amount * rate/1200 * (1+rate/1200)**inst_num)/(((1+rate/1200)**inst_num)-1)
